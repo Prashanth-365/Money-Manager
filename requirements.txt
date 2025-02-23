@@ -1,0 +1,9 @@
+firebase_functions~=0.1.0
+flask
+python-telegram-bot
+pyTelegramBotAPI
+gspread
+google-api-python-client
+oauth2client
+firebase-admin
+python-dotenv

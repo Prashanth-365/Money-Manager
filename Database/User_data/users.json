@@ -1,0 +1,42 @@
+{
+  "Prashanth": {
+    "user_id": 1624670859,
+    "web_app_url": "https://script.google.com/macros/s/AKfycbyfDk_AXKgGzpVQR9z7J9i0xPsn8sNG0lY0byeP5ZhP6ZyagcLkq-o5TsCLFfj4tp-i/exec",
+    "accounts": {
+      "8536": {
+        "bank_name" : "KBL",
+        "sub_users": {
+          "Prashanth": [
+            "My Self",
+            "College"
+          ],
+          "Roopa": [
+            "Material",
+            "Home expenses",
+            "Cheeti"
+          ],
+          "Eshwar": [
+            "Payment"
+          ]
+        }
+      },
+      "6869": {
+        "bank_name" : "Kotak",
+        "sub_users": {
+          "Prashanth": [
+            "My Self",
+            "College"
+          ],
+          "Roopa": [
+            "Material",
+            "Home expenses",
+            "Cheeti"
+          ],
+          "Eshwar": [
+            "Payment"
+          ]
+        }
+      }
+    }
+  }
+}
