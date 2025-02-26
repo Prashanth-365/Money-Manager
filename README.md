@@ -64,7 +64,7 @@ This project is a money management tool that helps segregate and manage transact
      }
      ```
    - Share your Google Sheet with your service account email.
-   - Copy the provided template sheet: **[Sheet URL]**
+   - Copy the provided template sheet: **[https://docs.google.com/spreadsheets/d/1R8nfg6QV43dv8PCheT4lmUfIJGlNqI2QFbXTngVKjEI/edit?usp=sharing]**
    - Deploy the Google Apps Script macro and add the `web_app_url` to `user_data.json`.
 
 5. **Configure User Data** Update `user_data.json` with user details:
