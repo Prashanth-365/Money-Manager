@@ -1,13 +1,13 @@
 {
   "type": "service_account",
-  "project_id": "money-management-tool-450414",
-  "private_key_id": "ab7aedb0458bbc6c4af9c8201dee4096ff14ab66",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDc7W+JOCuLG/jr\nT+hgETJ/j7LvuwMWYUmcqj/2yKedHZZ/xSWX+3Z+46iLcKQiyp2QuBsM7LWsIVFc\ncWH7PnHVOHCjuhXZOkRulA4tQDEkUymq2/cIxzGtgwuyxccimdev8qD+3BOLiDKu\ndiALkh6Jc8bJavGZCsYRtSFd/80M/b6V1wkH4SfWS72EEkBF1cPeADWe3INbIuJR\nrv1mvvm3ia94WZYPNftKGhXA+ImF5FfDCBpn5QrR7zLcs22qafl8bFLFPxWap1AK\nR3EJXxUmi3L7Uh7O4qZmTM48Pk6kt1h3feJRT5eTm57lSxF0iSBGi6NCHup5UWD+\nhU7hhEVrAgMBAAECggEAMZfNE1D8GVCQqoX4BGSn4NGpmb3xvfrd0uC21heJ5K+J\nIqpnO3wzx90j7xU8iyDPiPaC//488+RQxr8e/w6v7+ypAF/b2rUFOotauVaxEVXn\nwxZ4mExavvftTtat0nsVW0ZMVJmje415zwbuP5qv5ywJohozHKc5+iyeTmMHLRR3\n+KedLa+XyY6c2JeDYuuuSGj/1QDO+zSCGy09tmoz/XoK020E4DcFVX6SdyZx2w4T\nAlEfR/fBvAkOuYH/FKOGYBIgSr/D6dtSEYg1MAYUUrQdCVPcSZwuHKr9SjGNxBWm\n/HxQv2ighomVOLGtjCKo7d4bXDl+KEgIp7w9k6xtJQKBgQD18PVANzdISV1YHi9h\nF7aOswsEZlRZ2UA2THMH6HtEsMrM1cb4cvidudlJwzlboMuQUr1394WCJ31S530s\nc5re3ulK+d+yYOcYyyMn4jAi0pdg8MJ3LwboCIm+zYhbjXRY5g/IXLi78xvExmuG\n9mwpv5LK+vV0q8irLrOwccm/bwKBgQDl9pRwNfym5dYj6cPLGaOsBHhDhK+7q3dV\nwjujktoMOufXwn+J3Umq2fDWnGEL6zS1BW1z8x4Z6yNSEyWpODmyGeEYiWT2P1vU\nJgSg/bYYzCMPA7K3bOYpxSIHZge6WfHzRYmb3roG9k/zRzPdHhSFsAwc5Po1dx2W\nrRQurYDbxQKBgGpSXPQB6thJPx1VD05+HeHa7SxdwKGHFgdjTWdhzciIVWPwFzBZ\nI7msGo+U4jsGbHpcCqTOUN1PjRJGGQsafx1SaLCNDXPkCIPjbbNUSVMEj4TNEITN\nw8KTzli6KfTKVj4IV1JbI1G9a4fJ77pM1b3GoAM4MtzZVssKSYxB5OHpAoGBAKNe\nH2nwEIMIuK5evceleU8VBdMBik6Kq4ZzLCcyhlE178qp1C0+1bzYg24TPiZXe+Q1\n7OH4jyPelgMSsyiaVvKdy/nAccc2j6gRMiyk0R6gty9Nc0M3y/NUpq4W39qVV3t5\npR7khce4aGft53xoiC/JN3G3gcFF0/FdF/9pJyf5AoGBANlXWG529u+TK5jLwopW\nlneLPo3BvyXXbl0nYMeDC4H9hBkCsbEMtFdeC+Zo0mNriplxDrQ4SK/zR9sGcHrc\n9EpZgqogoRlkPtgdP086GWlQQZxHPEUIgF1KyudjKnG9tiQU6mo56qPRY9rH6Jah\n+BoyuKETK8GZHuJS0SV3IBqu\n-----END PRIVATE KEY-----\n",
-  "client_email": "money-management-tool@money-management-tool-450414.iam.gserviceaccount.com",
-  "client_id": "112085568636767643417",
+  "project_id": "your_id",
+  "private_key_id": "rand_number your key",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nrand_number your key\n-----END PRIVATE KEY-----\n",
+  "client_email": "name@name.iam.gserviceaccount.com",
+  "client_id": "id",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/money-management-tool%40money-management-tool-450414.iam.gserviceaccount.com",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/name/name.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
 }

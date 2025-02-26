@@ -5,7 +5,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 from dotenv import load_dotenv
 
-from process_transaction import creds_from_user_id, get_user_data, process
+from process_transaction import creds_from_user_id, get_user_data, process, creds_from_ac_no
 from sheet_operations import get_values
 from macro_functions import insert_delete_data
 from sheet_operations import add_transaction
@@ -14,7 +14,7 @@ load_dotenv()  # Load variables from .env file
 app = Flask(__name__)
 
 # Telegram Bot Setup
-BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")  # Replace with your token
+BOT_TOKEN = os.getenv("BOT_TOKEN")  # Replace with your token
 bot = telebot.TeleBot(BOT_TOKEN)
 
 # Google Sheets Setup
@@ -28,8 +28,14 @@ sheet = spreadsheet.worksheet("Sheet1")  # Replace with your sheet name
 user_data = {}
 
 
+@app.route("/", methods=["GET"])
+def home():
+    return "Bot is running!"
+
+
 @app.route('/receive_sms', methods=['POST'])
 def receive_sms():
+    print("HI")
     sms_data = request.get_data(as_text=True)
     if sms_data:
         print(f"Received SMS: {sms_data}")  # Add print statement for debugging
@@ -57,7 +63,16 @@ def handle_message(message):
     if user_id not in user_data:
         user_data[user_id] = {}
     if text == '/start':
-        yes_no(user_id)
+        creds = creds_from_user_id(user_id)
+        spread_sheet = f"Transaction Datasheet - {creds['account_holder']}"
+        data = get_values(spread_sheet, "Pending Transactions", "row", 5, 2, 9)
+
+        # bot.send_message(user_id, f"{data}")
+        if data:
+            yes_no(user_id)
+        else:
+            bot.send_message(user_id, "There is no Pending transaction to add")
+
     else:
         process_input("", user_id, text)
 
@@ -82,25 +97,36 @@ def generate_markup(category_name, category_lst):
 
 
 def process_input(call_id, user_id, input_value):
+    print(input_value)
     global user_data
     if "yes_no" or "transaction" in input_value:
         response = input_value.split("_")[-1]
         response_lower = response.lower()
 
         if response_lower == "cancel":
-            bot.answer_callback_query(call_id, text="Canceled")
+            if call_id:  # Only if call_id is valid
+                bot.answer_callback_query(call_id, text="Canceled")
+            else:
+                bot.send_message(user_id, text=response)  # Normal response for text messages
             bot.send_message(user_id, "Canceled")
             user_data = {}
 
-        elif "sub_user" in user_data[user_id] and "category" in user_data[user_id] and "description" not in user_data[user_id]:
+        elif user_id in user_data and "sub_user" in user_data[user_id] and "category" not in user_data[user_id] and "7271554509" in user_data:
+            user_data[user_id]["category"] = response
+            user_data[user_id]["description"] = "NA"
+            insert_to_database(user_id, "")
+
+        elif user_id in user_data and "sub_user" in user_data[user_id] and "category" in user_data[user_id] and "description" not in user_data[user_id]:
             user_data[user_id]["description"] = response
             insert_to_database(user_id, "")
 
         elif response_lower != "cancel":
-            bot.answer_callback_query(call_id, text=f"{response}")  # Notify user
-            if response_lower != "yes":
-                bot.send_message(user_id, f"You choose: {response}")
+            if call_id:  # Only if call_id is valid
+                bot.answer_callback_query(call_id, text=f"{response}")
             else:
+                bot.send_message(user_id, text=response)  # Normal response for text messages
+
+            if response_lower != "yes":
                 bot.send_message(user_id, f"You choose: {response}")
             insert_to_database(user_id, input_value)
 
@@ -113,18 +139,22 @@ def get_input(user_id, txn, input_value):
     else:
         txn_type = "credited"
         from_to = "from"
-    txn_message = (f"Your a/c XX{txn[0]} {txn_type} for Rs.{round(float(txn[-1]), 2)} on {txn[2]} {txn[3]}"
-                   f" trf {from_to} {txn[5].capitalize()}. UPI:{txn[4]}.")
-    ac_num = txn[0]
-    user_creds = get_user_data()
-    users = user_creds["Prashanth"]["accounts"][ac_num]["sub_users"]
+    ac_no = txn[0]
+    user_creds = creds_from_ac_no(ac_no)
+    bank_name = user_creds["account"]["bank_name"]
+    users = user_creds["account"]["sub_users"]
     sub_users_lst = list(users.keys())
     # {1624670859: {'sub_user': 'user', 'category': 'Category2'}}
 
+    if user_id not in user_data:  # Ensure user_id exists in user_data
+        user_data[user_id] = {}  # Initialize an empty dictionary for the user
     if "Yes" in input_value:
         # user_data[user_id]["sub_user"] = input_value.split("_")[1]
+        txn[2] = f"{txn[2][-2:]}-{txn[2][4:6]}-{txn[2][:4]}"
+        txn[3] = f"{txn[3][:2]}:{txn[3][2:]}"
         txn_message = (f"Your a/c XX{txn[0]} {txn_type} for Rs.{round(float(txn[-1]), 2)} on {txn[2]} {txn[3]}"
-                       f" trf {from_to} {txn[5].capitalize()}. UPI:{txn[4]}.")
+                       f" trf {from_to} {txn[5].capitalize()}. UPI:{txn[4]} - {bank_name}.")
+
         bot.send_message(user_id, txn_message)
         if len(sub_users_lst) == 1:
             user_data[user_id]["sub_user"] = sub_users_lst[0]
@@ -157,7 +187,7 @@ def insert_to_database(user_id, input_value):
     global user_data
     # get credentials
     creds = creds_from_user_id(user_id)
-    spread_sheet = f"Transaction Datasheet - {creds["account_holder"]}"
+    spread_sheet = f"Transaction Datasheet - {creds['account_holder']}"
 
     data = get_values(spread_sheet, "Pending Transactions", "row", 5, 2, 9)
     if input_value:

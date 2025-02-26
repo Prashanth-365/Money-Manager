@@ -2,6 +2,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from macro_functions import insert_delete_data, add_new_month
 
+from gspread.exceptions import SpreadsheetNotFound, WorksheetNotFound
 # Define the scope for Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
@@ -20,10 +21,26 @@ def col_idx(col):
     return index
 
 
-def initiate_sheet(spread_sheet, sheet_name):
-    # Open the Google Sheet by its name
-    spreadsheet = client.open(spread_sheet)  # Replace with your sheet name
-    return spreadsheet.worksheet(sheet_name)
+def initiate_sheet(spread_sheet, sheet_name, rows=100, cols=20):
+    try:
+        # Try to open the spreadsheet
+        spreadsheet = client.open(spread_sheet)
+        print(f"Spreadsheet '{spread_sheet}' found.")
+    except SpreadsheetNotFound:
+        print(f"Spreadsheet '{spread_sheet}' not found. Creating a new spreadsheet.")
+        spreadsheet = client.create(spread_sheet)
+        # Share the sheet if needed (e.g., to a specific email)
+        spreadsheet.share('your_email@example.com', perm_type='user', role='writer')
+
+    try:
+        # Try to get the worksheet
+        sheet = spreadsheet.worksheet(sheet_name)
+        print(f"Worksheet '{sheet_name}' found.")
+    except WorksheetNotFound:
+        print(f"Worksheet '{sheet_name}' not found. Creating a new worksheet.")
+        sheet = spreadsheet.add_worksheet(title=sheet_name, rows=str(rows), cols=str(cols))
+
+    return sheet
 
 
 def find(web_app_url, spread_sheet, sheet_name, date):
@@ -32,13 +49,17 @@ def find(web_app_url, spread_sheet, sheet_name, date):
     try:
         cell = sheet.find(date_val)
         if cell:
-            return cell.row, cell.col  # Returns the cell object if found
+            return cell.row, cell.col  # ✅ Return row and column if found
     except Exception as e:
-        print(e)
+        print(f"Error finding date {date}: {e}")
         print(web_app_url, sheet_name, date)
-        add_new_month(web_app_url, sheet_name, date)
-        find(web_app_url, spread_sheet, sheet_name, date)  # Return None if the value is not found
 
+    # If the date is not found, try adding a new month
+    add_new_month(web_app_url, sheet_name, date)
+
+    # Try finding again
+    result = find(web_app_url, spread_sheet, sheet_name, date)
+    return result if result else (None, None)  # ✅ Ensure it always returns (row, col)
 
 
 def add_transaction(web_app_url, spread_sheet, sheet_name, data):

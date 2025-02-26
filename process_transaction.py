@@ -1,7 +1,6 @@
 import re
 import json
-from sheet_operations import initiate_sheet, add_transaction, get_values
-from macro_functions import insert_delete_data
+from sheet_operations import get_values
 
 debit = ["debited", "sent"]
 credit = ["credited", "received"]
@@ -29,6 +28,7 @@ def creds_from_ac_no(ac_no):
         if ac_no in values["accounts"].keys():
             credentials["account_holder"] = name
             credentials["user_id"] = values["user_id"]
+            credentials["account"] = values["accounts"][ac_no]
             credentials["web_app_url"] = values["web_app_url"]
     return credentials
 
@@ -57,13 +57,21 @@ def message_data(message):
         amount_match = re.search(r'rs\.(\d+\.\d{2})', message)
         name_match = re.search(r'(?:to|from)\s([\w@.]+)', message)
 
+        print(account_match)
+        print(date_match)
+        print(time_match)
+        print(txn_id_match)
+        print(txn_type_match)
+        print(amount_match)
+        print(name_match)
+
         if not all([account_match, date_match, time_match, txn_id_match, txn_type_match, amount_match, name_match]):
             raise ValueError("One or more regex patterns did not match.")
 
         account_number = account_match.group(1)
         date = date_match.group(1)
         time = time_match.group(1)
-        transaction_id = txn_id_match.group(1)
+        transaction_id = txn_id_match.group(1) if txn_id_match else "NA"
         transaction_type = txn_type_match.group(1).lower()
         amount = amount_match.group(1)
         name = name_match.group(1).strip()
@@ -106,7 +114,7 @@ def process(sms_text):
         date = new_txn["date"]
         time = new_txn["time"]
         data = [ac_no, slno, date, time, new_txn["txn ID"], new_txn["name"], new_txn["debit"], new_txn["credit"]]
-        insert_delete_data(creds["web_app_url"], "Pending Transactions", "insert", 5, "b", data)
+        # insert_delete_data(creds["web_app_url"], "Pending Transactions", "insert", 5, "b", data)
         print(f"Data to insert: {data}")
         return creds["user_id"]
     except Exception as e:
@@ -115,5 +123,6 @@ def process(sms_text):
 
 
 if __name__ == "__main__":
-    message = {"time":"22/02, 9:16 pm","key":"date: 20250222\ntime: 2116\nSent Rs.20.00 from Kotak Bank AC X6869 to 8123426823@axl on 22-02-25.UPI Ref 505317212798. Not you, https://kotak.com/KBANKT/Fraud"}
+    message = {"xx2202 DEBITED for Rs.12,000.00/- MBS/To TEJAS E/036327 -Balance is Rs.3337.03 (24-02-2025 20:57:17) Not done by you?SMS BLOCK 2202 to 9152916275 -Karnataka Bank"}
+    print(message)
     process(message)
