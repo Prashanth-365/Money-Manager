@@ -150,9 +150,9 @@ This project is deployed on PythonAnywhere. Follow these steps to deploy:
 
 ## Future Enhancements
 
-- Automate transaction categorization using AI.
-- Add support for multiple banks.
-- Provide analytics and insights on spending habits.
+- Ability to add cash transactions
+- Email scraping to fetch transaction data real time or at the end of the day.
+- Account statement processing to reconcile and add any missed transactions at the end of the month.
 
 ## Contributing
 
